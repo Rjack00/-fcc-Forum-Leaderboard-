@@ -1,10 +1,13 @@
+// URLs for accessing forum data and assets
 const forumLatest = "https://cdn.freecodecamp.org/curriculum/forum-latest/latest.json";
 const forumTopicUrl = "https://forum.freecodecamp.org/t/";
 const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
 const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
 
+// DOM element where the posts will be rendered
 const postsContainer = document.getElementById("posts-container");
 
+// Categories mapping with IDs, names, and CSS class names
 const allCategories = {
   299: { category: "Career Advice", className: "career" },
   409: { category: "Project Feedback", className: "feedback" },
@@ -16,19 +19,23 @@ const allCategories = {
   560: { category: "Backend Development", className: "backend" },
 };
 
+// Generates a clickable category link for a given category ID
 const forumCategory = (id) => {
   let selectedCategory = {};
 
   if (allCategories.hasOwnProperty(id)) {
+    // Retrieve category details if the ID exists
     const { className, category } = allCategories[id];
-
     selectedCategory.className = className;
     selectedCategory.category = category;
   } else {
+    // Default category if the ID is not found
     selectedCategory.className = "general";
     selectedCategory.category = "General";
     selectedCategory.id = 1;
   }
+
+  // Build category link HTML
   const url = `${forumCategoryUrl}${selectedCategory.className}/${id}`;
   const linkText = selectedCategory.category;
   const linkClass = `category ${selectedCategory.className}`;
@@ -38,6 +45,7 @@ const forumCategory = (id) => {
   </a>`;
 };
 
+// Converts a timestamp into a relative time string (e.g., "5m ago")
 const timeAgo = (time) => {
   const currentTime = new Date();
   const lastPost = new Date(time);
@@ -60,6 +68,7 @@ const timeAgo = (time) => {
   return `${daysAgo}d ago`;
 };
 
+// Formats the view count, converting numbers >= 1000 to "xk"
 const viewCount = (views) => {
   const thousands = Math.floor(views / 1000);
 
@@ -70,6 +79,7 @@ const viewCount = (views) => {
   return views;
 };
 
+// Generates HTML for user avatars
 const avatars = (posters, users) => {
   return posters
     .map((poster) => {
@@ -85,6 +95,7 @@ const avatars = (posters, users) => {
     .join("");
 };
 
+// Fetches the latest forum data and calls showLatestPosts to render it
 const fetchData = async () => {
   try {
     const res = await fetch(forumLatest);
@@ -95,12 +106,15 @@ const fetchData = async () => {
   }
 };
 
+// Initialize data fetch when the script runs
 fetchData();
 
+// Renders the latest forum posts in the table
 const showLatestPosts = (data) => {
   const { topic_list, users } = data;
   const { topics } = topic_list;
 
+  // Map topics to table rows and render in postsContainer
   postsContainer.innerHTML = topics.map((item) => {
     const {
       id,
