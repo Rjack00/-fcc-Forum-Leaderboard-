@@ -71,9 +71,13 @@ const timeAgo = (time) => {
 // Formats the view count, converting numbers >= 1000 to "xk"
 const viewCount = (views) => {
   const thousands = Math.floor(views / 1000);
+  const thousandsPoint = (views / 1000).toFixed(1);
 
-  if (views >= 1000) {
+  if (views >= 1000 && views.toString().charAt(1) == 0) {
     return `${thousands}k`;
+  }
+  if (views >= 1000 && views.toString().charAt(1) > 0) {
+    return `${thousandsPoint}k`;
   }
 
   return views;
